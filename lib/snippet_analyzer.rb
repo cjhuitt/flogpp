@@ -4,6 +4,7 @@ class SnippetAnalyzer
     code.gsub! /\/\/.*$/, ""            # C++ Comments
     code.gsub! /\/\*.*\*\//, ""         # C Comments
     code.gsub! /[\w:]+\s*(.*)\s*{/, ""  # Function declarations
+    code.gsub! /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/, ""  # const variable assignment
     @score = 0
     @score = 1 if code.include? "="
   end

@@ -49,4 +49,10 @@ class SnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 1
   end
+
+  def test_finds_zero_for_const_assignment
+    code = "const int a = 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 0
+  end
 end
