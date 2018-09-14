@@ -31,4 +31,10 @@ class SnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 0
   end
+
+  def test_finds_one_for_simple_assignment
+    code = "a = 1;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end
