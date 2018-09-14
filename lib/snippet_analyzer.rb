@@ -1,4 +1,4 @@
-class FunctionAnalyzer
+class SnippetAnalyzer
   def initialize( _ )
   end
 
