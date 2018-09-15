@@ -22,10 +22,8 @@ class SnippetAnalyzer
     @conditionals = 1 if code.include? "!="
 
     code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
-    if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
-      @assignments = 1
-      code.gsub! /\b\w+\s*(<<=|>>=)\s*\w+\b/, ""
-    end
+
+    @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
     @assignments = 1 if /[^!=><]\s*=\s*[^!=]/.match? code # straight assignment
     @assignments = 1 if code.include? "++"
     @assignments = 1 if code.include? "--"
