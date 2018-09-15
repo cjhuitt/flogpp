@@ -12,6 +12,15 @@ class SnippetAnalyzer
     code = clean_const_declarations_from code
 
     @conditionals = 1 if code.include? "catch"
+    @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
+    @conditionals = 1 if code.include? "else"
+    @conditionals = 1 if code.include? "case"
+    @conditionals = 1 if code.include? "default"
+    @conditionals = 1 if code.include? "try"
+    @conditionals = 1 if /^\s*\w+\s*$/.match? code      # unary conditions
+    @conditionals = 1 if code.include? "=="
+    @conditionals = 1 if code.include? "!="
+
     code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
     if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
       @assignments = 1
@@ -26,15 +35,6 @@ class SnippetAnalyzer
     @branches = 2 if /\snew\s/.match? code
     @branches = 2 if /\sdelete\s/.match? code
     @branches = 3 if code.include? "goto"
-
-    @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
-    @conditionals = 1 if code.include? "else"
-    @conditionals = 1 if code.include? "case"
-    @conditionals = 1 if code.include? "default"
-    @conditionals = 1 if code.include? "try"
-    @conditionals = 1 if /^\s*\w+\s*$/.match? code      # unary conditions
-    @conditionals = 1 if code.include? "=="
-    @conditionals = 1 if code.include? "!="
   end
 
   def score
