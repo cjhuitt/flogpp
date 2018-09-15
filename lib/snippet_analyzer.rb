@@ -13,7 +13,7 @@ class SnippetAnalyzer
 
     check_conditionals_in code
 
-    code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
+    code = clean_function_declarations_from code
 
     @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
     @assignments = 1 if /[^!=><]\s*=\s*[^!=]/.match? code # straight assignment
@@ -41,6 +41,11 @@ class SnippetAnalyzer
     CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
     def clean_const_declarations_from code
       code.gsub(CONST_VARIABLE_DECLARATION, "")
+    end
+
+    FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
+    def clean_function_declarations_from code
+      code.gsub(FUNCTION_DECLARATION, "")
     end
 
     def check_conditionals_in code
