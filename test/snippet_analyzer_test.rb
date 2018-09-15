@@ -55,4 +55,64 @@ class SnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 0
   end
+
+  def test_finds_one_for_multiply_assignment
+    code = "a *= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_divide_assignment
+    code = "a /= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_modulo_assignment
+    code = "a %= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_addition_assignment
+    code = "a += 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_subtraction_assignment
+    code = "a -= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_shift_left_assignment
+    code = "a <<= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_shift_right_assignment
+    code = "a >>= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_bitwise_and_assignment
+    code = "a &= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_bitwise_or_assignment
+    code = "a |= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_bitwise_not_assignment
+    code = "a ^= 2;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end
