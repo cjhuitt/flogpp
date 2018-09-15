@@ -139,4 +139,34 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 1
   end
+
+  def test_finds_one_for_regular_function_call
+    code = "foo();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_global_scoped_function_call
+    code = "::foo();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_namespace_scoped_function_call
+    code = "::std::foo();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_instance_function_call
+    code = "    a.foo();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_pointer_function_call
+    code = "    a->b->foo();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end
