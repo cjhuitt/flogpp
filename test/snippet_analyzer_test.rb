@@ -199,4 +199,40 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 2
   end
+
+  def test_scores_one_for_equality_test
+    code = "    a == b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_scores_one_for_inequality_test
+    code = "    a!=b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_scores_one_for_greater_or_equal_test
+    code = "a>= b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_scores_one_for_lesser_or_equal_test
+    code = "a <=b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_scores_one_for_greater_than_test
+    code = "    a > b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_scores_one_for_lesser_than_test
+    code = "    a < b"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end
