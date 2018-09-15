@@ -11,15 +11,7 @@ class SnippetAnalyzer
     code = clean_comments_from code
     code = clean_const_declarations_from code
 
-    @conditionals = 1 if code.include? "catch"
-    @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
-    @conditionals = 1 if code.include? "else"
-    @conditionals = 1 if code.include? "case"
-    @conditionals = 1 if code.include? "default"
-    @conditionals = 1 if code.include? "try"
-    @conditionals = 1 if /^\s*\w+\s*$/.match? code      # unary conditions
-    @conditionals = 1 if code.include? "=="
-    @conditionals = 1 if code.include? "!="
+    check_conditionals_in code
 
     code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
 
@@ -49,5 +41,17 @@ class SnippetAnalyzer
     CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
     def clean_const_declarations_from code
       code.gsub(CONST_VARIABLE_DECLARATION, "")
+    end
+
+    def check_conditionals_in code
+      @conditionals = 1 if code.include? "catch"
+      @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
+      @conditionals = 1 if code.include? "else"
+      @conditionals = 1 if code.include? "case"
+      @conditionals = 1 if code.include? "default"
+      @conditionals = 1 if code.include? "try"
+      @conditionals = 1 if /^\s*\w+\s*$/.match? code      # unary conditions
+      @conditionals = 1 if code.include? "=="
+      @conditionals = 1 if code.include? "!="
     end
 end
