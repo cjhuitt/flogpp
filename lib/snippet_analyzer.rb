@@ -27,7 +27,7 @@ class SnippetAnalyzer
     @branches = 2 if /\sdelete\s/.match? code
     @branches = 3 if code.include? "goto"
 
-    @conditionals = 1 if code.include? "<"
+    @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
     @conditionals = 1 if /[^-]\s*>/.match? code # greater than which isn't a pointer access
     @conditionals = 1 if code.include? "else"
     @conditionals = 1 if code.include? "case"
