@@ -15,16 +15,8 @@ class SnippetAnalyzer
 
     code = clean_function_declarations_from code
 
-    @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
-    @assignments = 1 if /[^!=><]\s*=\s*[^!=]/.match? code # straight assignment
-    @assignments = 1 if code.include? "++"
-    @assignments = 1 if code.include? "--"
-
-    @branches = 1 if /(^|\s)(((::)?\w+)+)\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code      # scoped function calls
-    @branches = 1 if /(^|\s)((\w+)(\.|->)?)+\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code   # pointer/instance function calls
-    @branches = 2 if /\snew\s/.match? code
-    @branches = 2 if /\sdelete\s/.match? code
-    @branches = 3 if code.include? "goto"
+    check_assignments_in code
+    check_branches_in code
   end
 
   def score
@@ -46,6 +38,21 @@ class SnippetAnalyzer
     FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
     def clean_function_declarations_from code
       code.gsub(FUNCTION_DECLARATION, "")
+    end
+
+    def check_assignments_in code
+      @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
+      @assignments = 1 if /[^!=><]\s*=\s*[^!=]/.match? code # straight assignment
+      @assignments = 1 if code.include? "++"
+      @assignments = 1 if code.include? "--"
+    end
+
+    def check_branches_in code
+      @branches = 1 if /(^|\s)(((::)?\w+)+)\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code      # scoped function calls
+      @branches = 1 if /(^|\s)((\w+)(\.|->)?)+\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code   # pointer/instance function calls
+      @branches = 2 if /\snew\s/.match? code
+      @branches = 2 if /\sdelete\s/.match? code
+      @branches = 3 if code.include? "goto"
     end
 
     def check_conditionals_in code
