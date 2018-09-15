@@ -115,4 +115,28 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 1
   end
+
+  def test_finds_one_for_pre_increment
+    code = "++a;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_post_increment
+    code = "a++;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_pre_decrement
+    code = "--a;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_post_decrement
+    code = "a--;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end

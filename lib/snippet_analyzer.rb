@@ -7,5 +7,7 @@ class SnippetAnalyzer
     code.gsub! /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/, ""  # const variable assignment
     @score = 0
     @score = 1 if code.include? "="
+    @score = 1 if code.include? "++"
+    @score = 1 if code.include? "--"
   end
 end
