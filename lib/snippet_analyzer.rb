@@ -9,7 +9,8 @@ class SnippetAnalyzer
     @conditionals = 0
 
     code = clean_comments_from code
-    code.gsub! /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/, ""  # const variable assignment
+    code = clean_const_declarations_from code
+
     @conditionals = 1 if code.include? "catch"
     code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
     if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
@@ -46,5 +47,10 @@ class SnippetAnalyzer
     CPP_COMMENT = /\/\/.*$/
     def clean_comments_from code
       code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
+    end
+
+    CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
+    def clean_const_declarations_from code
+      code.gsub(CONST_VARIABLE_DECLARATION, "")
     end
 end
