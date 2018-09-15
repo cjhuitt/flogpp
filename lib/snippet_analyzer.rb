@@ -3,13 +3,12 @@ class SnippetAnalyzer
   attr_reader :branches
   attr_reader :conditionals
 
-  def initialize(code)
+  def initialize code
     @assignments = 0
     @branches = 0
     @conditionals = 0
 
-    code.gsub! /\/\/.*$/, ""            # C++ Comments
-    code.gsub! /\/\*.*\*\//, ""         # C Comments
+    code = clean_comments_from code
     code.gsub! /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/, ""  # const variable assignment
     @conditionals = 1 if code.include? "catch"
     code.gsub! /[\w:]+\s*\(.*\)\s*{/, ""  # Function declarations
@@ -41,4 +40,11 @@ class SnippetAnalyzer
   def score
     @assignments + @branches + @conditionals
   end
+
+  private
+    C_COMMENT = /\/\*.*\*\//
+    CPP_COMMENT = /\/\/.*$/
+    def clean_comments_from code
+      code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
+    end
 end
