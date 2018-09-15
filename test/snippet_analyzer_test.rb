@@ -169,4 +169,16 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 1
   end
+
+  def test_finds_one_for_global_scoped_function_call_with_params
+    code = "::foo(bar,nullptr);"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
+
+  def test_finds_one_for_member_function_call_with_params
+    code = "    a->b.foo( b, c );"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 1
+  end
 end

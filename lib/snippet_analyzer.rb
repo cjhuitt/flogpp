@@ -9,7 +9,7 @@ class SnippetAnalyzer
     @score = 1 if code.include? "="
     @score = 1 if code.include? "++"
     @score = 1 if code.include? "--"
-    @score = 1 if /(^|\s)(((::)?\w+)+)\s*\(\)/.match? code      # scoped function calls
-    @score = 1 if /(^|\s)((\w+)(\.|->)?)+\s*\(\)/.match? code   # pointer/instance function calls
+    @score = 1 if /(^|\s)(((::)?\w+)+)\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code      # scoped function calls
+    @score = 1 if /(^|\s)((\w+)(\.|->)?)+\s*\(\s*(([\w]+(\.|->)?)\s*,?\s*)*\s*\)/.match? code   # pointer/instance function calls
   end
 end
