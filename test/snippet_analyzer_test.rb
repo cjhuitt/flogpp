@@ -265,4 +265,10 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal 1, function_analyzer.score()
   end
+
+  def test_scores_one_for_unary_conditional
+    code = "foo"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal 1, function_analyzer.score()
+  end
 end
