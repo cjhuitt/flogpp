@@ -1,5 +1,6 @@
 class SnippetAnalyzer
   attr_reader :score
+
   def initialize( code )
     @score = 0
     code.gsub! /\/\/.*$/, ""            # C++ Comments
