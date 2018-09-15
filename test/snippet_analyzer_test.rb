@@ -241,4 +241,22 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal 1, function_analyzer.score()
   end
+
+  def test_scores_one_for_case
+    code = "case FOO:"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal 1, function_analyzer.score()
+  end
+
+  def test_scores_one_for_default
+    code = "default:"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal 1, function_analyzer.score()
+  end
+
+  def test_scores_one_for_try
+    code = "try {"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal 1, function_analyzer.score()
+  end
 end
