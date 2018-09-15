@@ -187,4 +187,16 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal function_analyzer.score(), 3
   end
+
+  def test_scores_two_for_new
+    code = "    new AbraCadabra();"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 2
+  end
+
+  def test_scores_two_for_delete
+    code = "    delete pointer;"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal function_analyzer.score(), 2
+  end
 end
