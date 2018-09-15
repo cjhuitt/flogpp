@@ -259,4 +259,11 @@ class SimpleSnippetAnalyzerTest < Minitest::Test
     function_analyzer = SnippetAnalyzer.new( code )
     assert_equal 1, function_analyzer.score()
   end
+
+  def test_scores_one_for_catch
+    skip "tricky - matches function declaration syntax"
+    code = "} catch( exception& e ) {"
+    function_analyzer = SnippetAnalyzer.new( code )
+    assert_equal 1, function_analyzer.score()
+  end
 end
