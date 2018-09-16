@@ -8,6 +8,7 @@ class SnippetAnalyzer
     attr_reader :cleaned_code
     def initialize code
       @cleaned_code = clean_comments_from code
+      @cleaned_code = clean_scopes_from_code @cleaned_code
       @cleaned_code = clean_const_declarations_from @cleaned_code
     end
 
@@ -20,6 +21,11 @@ class SnippetAnalyzer
       CPP_COMMENT = /\/\/.*$/
       def clean_comments_from code
         code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
+      end
+
+      SCOPE = /\s*::\s*/
+      def clean_scopes_from_code code
+        code.gsub(SCOPE, "")
       end
 
       CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
