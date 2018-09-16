@@ -11,6 +11,7 @@ class SnippetAnalyzer
       @cleaned_code = clean_scopes_from @cleaned_code
       @cleaned_code = clean_simple_pointer_redirects_from @cleaned_code
       @cleaned_code = clean_simple_member_access_from @cleaned_code
+      @cleaned_code = clean_simple_new_with_params_from @cleaned_code
       @cleaned_code = clean_const_declarations_from @cleaned_code
     end
 
@@ -49,8 +50,19 @@ class SnippetAnalyzer
         code.gsub(SIMPLE_MEMBER_ACCESS, "")
       end
 
+      SIMPLE_NEW_WITH_PARENS =
+              /(new         # new keyword
+               [[:space:]]+ # required whitespace
+               [[:word:]]+) # typename
+               \([[:space:]]*\)         # parenthesis with nothing inside
+              /x
+      # Note this also removes decimals from constant float/doubles, but \shrug
+      def clean_simple_new_with_params_from code
+        code.gsub(SIMPLE_NEW_WITH_PARENS, "\\1")
+      end
+
       CONST_VARIABLE_DECLARATION =
-              /\bconst[[:space:]]+        # const as its own word
+              /\bconst[[:space:]]+       # const as its own word
                [[:word:]]+[[:space:]]+   # variable type
                [[:word:]]+               # variable name
                [[:space:]]*=[[:space:]]* # assignment operator
