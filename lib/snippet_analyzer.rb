@@ -28,7 +28,13 @@ class SnippetAnalyzer
         code.gsub(SCOPE, "")
       end
 
-      CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
+      CONST_VARIABLE_DECLARATION =
+              /\bconst[[:space:]]+        # const as its own word
+                [[:word:]]+[[:space:]]+   # variable type
+                [[:word:]]+               # variable name
+                [[:space:]]*=[[:space:]]* # assignment operator
+                [[:word:]]+[[:space:]]*;  # variable value
+              /x
       def clean_const_declarations_from code
         code.gsub(CONST_VARIABLE_DECLARATION, "")
       end
