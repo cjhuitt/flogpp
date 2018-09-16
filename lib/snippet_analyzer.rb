@@ -30,16 +30,22 @@ class SnippetAnalyzer
 
       CONST_VARIABLE_DECLARATION =
               /\bconst[[:space:]]+        # const as its own word
-                [[:word:]]+[[:space:]]+   # variable type
-                [[:word:]]+               # variable name
-                [[:space:]]*=[[:space:]]* # assignment operator
-                [[:word:]]+[[:space:]]*;  # variable value
+               [[:word:]]+[[:space:]]+   # variable type
+               [[:word:]]+               # variable name
+               [[:space:]]*=[[:space:]]* # assignment operator
+               [[:word:]]+[[:space:]]*;  # variable value
               /x
       def clean_const_declarations_from code
         code.gsub(CONST_VARIABLE_DECLARATION, "")
       end
 
-      FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
+      FUNCTION_DECLARATION =
+              /[[:word:]]+  # function name
+               [[:space:]]*
+               \(.*\)       # optional parameters inside parenthesis
+               [[:space:]]*
+               {            # open brace
+              /x
   end
 
   def initialize code
