@@ -11,6 +11,10 @@ class SnippetAnalyzer
       @cleaned_code = clean_const_declarations_from @cleaned_code
     end
 
+    def clean_function_declarations_from code
+      code.gsub(FUNCTION_DECLARATION, "")
+    end
+
     private
       C_COMMENT = /\/\*.*\*\//
       CPP_COMMENT = /\/\/.*$/
@@ -22,6 +26,8 @@ class SnippetAnalyzer
       def clean_const_declarations_from code
         code.gsub(CONST_VARIABLE_DECLARATION, "")
       end
+
+      FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
   end
 
   def initialize code
@@ -33,7 +39,7 @@ class SnippetAnalyzer
 
     check_conditionals_in cleaner.cleaned_code
 
-    code = clean_function_declarations_from cleaner.cleaned_code
+    code = cleaner.clean_function_declarations_from cleaner.cleaned_code
 
     check_assignments_in code
     check_branches_in code
@@ -44,12 +50,6 @@ class SnippetAnalyzer
   end
 
   private
-
-    FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
-    def clean_function_declarations_from code
-      code.gsub(FUNCTION_DECLARATION, "")
-    end
-
     def check_assignments_in code
       @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
       @assignments += code.scan(/[^!=><]\s*=\s*[^!=]/).size
