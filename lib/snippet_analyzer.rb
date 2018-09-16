@@ -8,7 +8,8 @@ class SnippetAnalyzer
     attr_reader :cleaned_code
     def initialize code
       @cleaned_code = clean_comments_from code
-      @cleaned_code = clean_scopes_from_code @cleaned_code
+      @cleaned_code = clean_scopes_from @cleaned_code
+      @cleaned_code = clean_simple_pointer_redirects_from @cleaned_code
       @cleaned_code = clean_const_declarations_from @cleaned_code
     end
 
@@ -24,8 +25,13 @@ class SnippetAnalyzer
       end
 
       SCOPE = /\s*::\s*/
-      def clean_scopes_from_code code
+      def clean_scopes_from code
         code.gsub(SCOPE, "")
+      end
+
+      SIMPLE_POINTER_REDIRECTION = /(?<=[[:word:]])\s*->\s*(?=[[:word:]])/
+      def clean_simple_pointer_redirects_from code
+        code.gsub(SIMPLE_POINTER_REDIRECTION, "")
       end
 
       CONST_VARIABLE_DECLARATION =
