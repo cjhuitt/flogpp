@@ -10,6 +10,7 @@ class SnippetAnalyzer
       @cleaned_code = clean_comments_from code
       @cleaned_code = clean_scopes_from @cleaned_code
       @cleaned_code = clean_simple_pointer_redirects_from @cleaned_code
+      @cleaned_code = clean_simple_member_access_from @cleaned_code
       @cleaned_code = clean_const_declarations_from @cleaned_code
     end
 
@@ -36,6 +37,16 @@ class SnippetAnalyzer
               /x
       def clean_simple_pointer_redirects_from code
         code.gsub(SIMPLE_POINTER_REDIRECTION, "")
+      end
+
+      SIMPLE_MEMBER_ACCESS =
+              /(?<=[[:word:]])             # Previous character is an identifier
+               [[:space:]]*\.[[:space:]]*  # Dot with optional space
+               (?=[[:word:]])              # Next character is an identifier
+              /x
+      # Note this also removes decimals from constant float/doubles, but \shrug
+      def clean_simple_member_access_from code
+        code.gsub(SIMPLE_MEMBER_ACCESS, "")
       end
 
       CONST_VARIABLE_DECLARATION =
