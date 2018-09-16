@@ -31,5 +31,19 @@ class CompoundAnalyzerScoreTest < Minitest::Test
     compound_analyzer = CompoundAnalyzer.new code
     assert_equal 2, compound_analyzer.score
   end
+
+  def test_score_recursive_fibonacci
+    code = <<-CODE
+    if (x == 1) {
+        return 1;
+    } else if (x == 0) {
+        return 0;
+    } else {
+        return fib(x-1)+fib(x-2);
+    }
+    CODE
+    compound_analyzer = CompoundAnalyzer.new code
+    assert_equal 6, compound_analyzer.score
+  end
 end
 

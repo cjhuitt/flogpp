@@ -116,14 +116,14 @@ class SnippetAnalyzer
     end
 
     def check_conditionals_in code
-      @conditionals = 1 if code.include? "catch"
-      @conditionals = 1 if /[^<>-]\s*(>|<)\s*=?\s*[^<>]/.match? code
-      @conditionals = 1 if code.include? "else"
-      @conditionals = 1 if code.include? "case"
-      @conditionals = 1 if code.include? "default"
-      @conditionals = 1 if code.include? "try"
-      @conditionals = 1 if /^\s*\w+\s*$/.match? code      # unary conditions
-      @conditionals = 1 if code.include? "=="
-      @conditionals = 1 if code.include? "!="
+      @conditionals += code.scan("catch").size
+      @conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
+      @conditionals += code.scan("else").size
+      @conditionals += code.scan("case").size
+      @conditionals += code.scan("default").size
+      @conditionals += code.scan("try").size
+      @conditionals += code.scan(/^\s*\w+\s*$/).size      # unary conditions
+      @conditionals += code.scan("==").size
+      @conditionals += code.scan("!=").size
     end
 end
