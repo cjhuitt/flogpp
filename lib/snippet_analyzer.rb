@@ -29,7 +29,11 @@ class SnippetAnalyzer
         code.gsub(SCOPE, "")
       end
 
-      SIMPLE_POINTER_REDIRECTION = /(?<=[[:word:]])\s*->\s*(?=[[:word:]])/
+      SIMPLE_POINTER_REDIRECTION =
+              /(?<=[[:word:]])             # Previous character is an identifier
+               [[:space:]]*->[[:space:]]*  # Arrow with optional space
+               (?=[[:word:]])              # Next character is an identifier
+              /x
       def clean_simple_pointer_redirects_from code
         code.gsub(SIMPLE_POINTER_REDIRECTION, "")
       end
