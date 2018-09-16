@@ -3,17 +3,37 @@ class SnippetAnalyzer
   attr_reader :branches
   attr_reader :conditionals
 
+  class Cleaner
+    # Remove unnecessary complications, leaving the structure for analysis
+    attr_reader :cleaned_code
+    def initialize code
+      @cleaned_code = clean_comments_from code
+      @cleaned_code = clean_const_declarations_from @cleaned_code
+    end
+
+    private
+      C_COMMENT = /\/\*.*\*\//
+      CPP_COMMENT = /\/\/.*$/
+      def clean_comments_from code
+        code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
+      end
+
+      CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
+      def clean_const_declarations_from code
+        code.gsub(CONST_VARIABLE_DECLARATION, "")
+      end
+  end
+
   def initialize code
     @assignments = 0
     @branches = 0
     @conditionals = 0
 
-    code = clean_comments_from code
-    code = clean_const_declarations_from code
+    cleaner = Cleaner.new code
 
-    check_conditionals_in code
+    check_conditionals_in cleaner.cleaned_code
 
-    code = clean_function_declarations_from code
+    code = clean_function_declarations_from cleaner.cleaned_code
 
     check_assignments_in code
     check_branches_in code
@@ -24,16 +44,6 @@ class SnippetAnalyzer
   end
 
   private
-    C_COMMENT = /\/\*.*\*\//
-    CPP_COMMENT = /\/\/.*$/
-    def clean_comments_from code
-      code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
-    end
-
-    CONST_VARIABLE_DECLARATION = /const\s+[\w:]+\s*[\w:]+\s*=\s*[\d.]+\s*;/
-    def clean_const_declarations_from code
-      code.gsub(CONST_VARIABLE_DECLARATION, "")
-    end
 
     FUNCTION_DECLARATION = /[\w:]+\s*\(.*\)\s*{/
     def clean_function_declarations_from code
