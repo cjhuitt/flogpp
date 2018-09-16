@@ -97,8 +97,7 @@ class SnippetAnalyzer
     end
 
     def check_branches_in code
-      @branches = 1 if /(^|\s)(\w+)\s*\(\s*(([\w]+\.?)\s*,?\s*)*\s*\)/.match? code      # scoped function calls
-      @branches = 1 if /(^|\s)((\w+)\.?)+\s*\(\s*(([\w]+\.?)\s*,?\s*)*\s*\)/.match? code   # pointer/instance function calls
+      @branches = 1 if /\b[[:word:]]+[[:space:]]*\([^()]*\)/.match? code
       @branches = 2 if /\snew\s/.match? code
       @branches = 2 if /\sdelete\s/.match? code
       @branches = 3 if code.include? "goto"
