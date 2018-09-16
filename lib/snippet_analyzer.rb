@@ -42,7 +42,7 @@ class SnippetAnalyzer
 
     def check_assignments_in code
       @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
-      @assignments = 1 if /[^!=><]\s*=\s*[^!=]/.match? code # straight assignment
+      @assignments += code.scan(/[^!=><]\s*=\s*[^!=]/).size
       @assignments = 1 if code.include? "++"
       @assignments = 1 if code.include? "--"
     end
