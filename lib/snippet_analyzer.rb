@@ -109,10 +109,10 @@ class SnippetAnalyzer
     end
 
     def check_branches_in code
-      @branches = 1 if /\b[[:word:]]+[[:space:]]*\([^()]*\)/.match? code
-      @branches = 2 if /\snew\s/.match? code
-      @branches = 2 if /\sdelete\s/.match? code
-      @branches = 3 if code.include? "goto"
+      @branches += code.scan(/\b[[:word:]]+[[:space:]]*\([^()]*\)/).size
+      @branches += code.scan(/\snew\s/).size * 2
+      @branches += code.scan(/\sdelete\s/).size * 2
+      @branches += code.scan("goto").size * 3
     end
 
     def check_conditionals_in code

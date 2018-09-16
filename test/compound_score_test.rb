@@ -25,5 +25,11 @@ class CompoundAnalyzerScoreTest < Minitest::Test
     compound_analyzer = CompoundAnalyzer.new( code )
     assert_equal 2, compound_analyzer.score
   end
+
+  def test_scores_two_for_assignments_on_two_lines
+    code = "    int a=2;\nb=3;"
+    compound_analyzer = CompoundAnalyzer.new( code )
+    assert_equal 2, compound_analyzer.score
+  end
 end
 
