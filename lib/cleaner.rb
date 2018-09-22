@@ -2,12 +2,14 @@ class Cleaner
   # Remove unnecessary complications, leaving the structure for analysis
   attr_reader :cleaned_code
   def initialize code
-    @cleaned_code = clean_comments_from code
-    @cleaned_code = clean_scopes_from @cleaned_code
-    @cleaned_code = clean_simple_pointer_redirects_from @cleaned_code
-    @cleaned_code = clean_simple_member_access_from @cleaned_code
-    @cleaned_code = clean_simple_new_with_params_from @cleaned_code
-    @cleaned_code = clean_const_declarations_from @cleaned_code
+    cleaners = [method(:clean_comments_from),
+                method(:clean_scopes_from),
+                method(:clean_simple_pointer_redirects_from),
+                method(:clean_simple_member_access_from),
+                method(:clean_simple_new_with_params_from),
+                method(:clean_const_declarations_from)]
+    @cleaned_code = code
+    cleaners.each { |c| @cleaned_code = c.call @cleaned_code }
   end
 
   def clean_function_declarations_from code
