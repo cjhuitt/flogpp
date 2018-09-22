@@ -1,7 +1,5 @@
 class SnippetAnalyzer
-  attr_reader :assignments
-  attr_reader :branches
-  attr_reader :conditionals
+  attr_reader :score
 
   class Cleaner
     # Remove unnecessary complications, leaving the structure for analysis
@@ -164,12 +162,8 @@ class SnippetAnalyzer
   end
 
   def initialize code
-    @assignments = AssignmentCounter.new(code).assignments
-    @branches = BranchCounter.new(code).branches
-    @conditionals = ConditionalCounter.new(code).conditionals
-  end
-
-  def score
-    @assignments + @branches + @conditionals
+    @score = AssignmentCounter.new(code).assignments
+    @score += BranchCounter.new(code).branches
+    @score += ConditionalCounter.new(code).conditionals
   end
 end
