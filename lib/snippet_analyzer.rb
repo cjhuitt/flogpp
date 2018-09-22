@@ -138,30 +138,38 @@ class SnippetAnalyzer
       end
   end
 
+  class ConditionalCounter
+    attr_reader :conditionals
+
+    def initialize code
+      @conditionals = 0
+
+      cleaner = Cleaner.new code
+
+      check_conditionals_in cleaner.cleaned_code
+    end
+
+    private
+      def check_conditionals_in code
+        @conditionals += code.scan("catch").size
+        @conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
+        @conditionals += code.scan("else").size
+        @conditionals += code.scan("case").size
+        @conditionals += code.scan("default").size
+        @conditionals += code.scan("try").size
+        @conditionals += code.scan(/^\s*\w+\s*$/).size      # unary conditions
+        @conditionals += code.scan("==").size
+        @conditionals += code.scan("!=").size
+      end
+  end
+
   def initialize code
     @assignments = AssignmentCounter.new(code).assignments
     @branches = BranchCounter.new(code).branches
-    @conditionals = 0
-
-    cleaner = Cleaner.new code
-
-    check_conditionals_in cleaner.cleaned_code
+    @conditionals = ConditionalCounter.new(code).conditionals
   end
 
   def score
     @assignments + @branches + @conditionals
   end
-
-  private
-    def check_conditionals_in code
-      @conditionals += code.scan("catch").size
-      @conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
-      @conditionals += code.scan("else").size
-      @conditionals += code.scan("case").size
-      @conditionals += code.scan("default").size
-      @conditionals += code.scan("try").size
-      @conditionals += code.scan(/^\s*\w+\s*$/).size      # unary conditions
-      @conditionals += code.scan("==").size
-      @conditionals += code.scan("!=").size
-    end
 end
