@@ -93,8 +93,31 @@ class SnippetAnalyzer
               /x
   end
 
+  class AssignmentCounter
+    attr_reader :assignments
+
+    def initialize code
+      @assignments = 0
+
+      cleaner = Cleaner.new code
+
+      code = cleaner.clean_function_declarations_from cleaner.cleaned_code
+      code = cleaner.clean_catches_from code
+
+      check_assignments_in code
+    end
+
+    private
+      def check_assignments_in code
+        @assignments += code.scan(/\b\w+\s*(<<=|>>=)\s*\w+\b/).size
+        @assignments += code.scan(/[^!=><]\s*=\s*[^!=]/).size
+        @assignments += code.scan("++").size
+        @assignments += code.scan("--").size
+      end
+  end
+
   def initialize code
-    @assignments = 0
+    @assignments = AssignmentCounter.new(code).assignments
     @branches = 0
     @conditionals = 0
 
@@ -105,7 +128,6 @@ class SnippetAnalyzer
     code = cleaner.clean_function_declarations_from cleaner.cleaned_code
     code = cleaner.clean_catches_from code
 
-    check_assignments_in code
     check_branches_in code
   end
 
@@ -114,13 +136,6 @@ class SnippetAnalyzer
   end
 
   private
-    def check_assignments_in code
-      @assignments += code.scan(/\b\w+\s*(<<=|>>=)\s*\w+\b/).size
-      @assignments += code.scan(/[^!=><]\s*=\s*[^!=]/).size
-      @assignments += code.scan("++").size
-      @assignments += code.scan("--").size
-    end
-
     def check_branches_in code
       @branches += code.scan(/\b[[:word:]]+[[:space:]]*\([^()]*\)/).size
       @branches += code.scan(/\snew\s/).size * 2
