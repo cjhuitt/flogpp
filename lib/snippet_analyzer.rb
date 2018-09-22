@@ -16,7 +16,11 @@ class SnippetAnalyzer
     end
 
     def clean_function_declarations_from code
-      code.gsub(FUNCTION_DECLARATION, "")
+      code.gsub(FUNCTION_DECLARATION, "{")
+    end
+
+    def clean_catches_from code
+      code.gsub(CATCH_BLOCK, "")
     end
 
     private
@@ -73,11 +77,19 @@ class SnippetAnalyzer
       end
 
       FUNCTION_DECLARATION =
-              /[[:word:]]+  # function name
+              /\b[[:word:]]+ # return type
+               [[:space:]]+
+               [[:word:]]+   # function name
                [[:space:]]*
-               \(.*\)       # optional parameters inside parenthesis
+               \(.*\)        # optional parameters inside parenthesis
                [[:space:]]*
-               {            # open brace
+               {             # open brace
+              /x
+
+      CATCH_BLOCK =
+              /\bcatch        # catch keyword
+               [[:space:]]*   # any amount of space
+               \(.*\)        # parenthesis and anything inside them
               /x
   end
 
@@ -91,6 +103,7 @@ class SnippetAnalyzer
     check_conditionals_in cleaner.cleaned_code
 
     code = cleaner.clean_function_declarations_from cleaner.cleaned_code
+    code = cleaner.clean_catches_from code
 
     check_assignments_in code
     check_branches_in code
@@ -102,10 +115,10 @@ class SnippetAnalyzer
 
   private
     def check_assignments_in code
-      @assignments = 1 if /\b\w+\s*(<<=|>>=)\s*\w+\b/.match? code
+      @assignments += code.scan(/\b\w+\s*(<<=|>>=)\s*\w+\b/).size
       @assignments += code.scan(/[^!=><]\s*=\s*[^!=]/).size
-      @assignments = 1 if code.include? "++"
-      @assignments = 1 if code.include? "--"
+      @assignments += code.scan("++").size
+      @assignments += code.scan("--").size
     end
 
     def check_branches_in code
