@@ -5,10 +5,7 @@ class AssignmentCounter
 
   def initialize code
     cleaner = ExtraCleaner.new
-    code = cleaner.clean_function_declarations_from cleaner.clean code
-    code = cleaner.clean_catches_from code
-
-    @assignments = check_assignments_in code
+    @assignments = check_assignments_in cleaner.clean code
   end
 
   private

@@ -5,10 +5,7 @@ class BranchCounter
 
   def initialize code
     cleaner = ExtraCleaner.new
-    code = cleaner.clean_function_declarations_from cleaner.clean code
-    code = cleaner.clean_catches_from code
-
-    @branches = check_branches_in code
+    @branches = check_branches_in cleaner.clean code
   end
 
   private

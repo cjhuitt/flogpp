@@ -89,6 +89,8 @@ class ExtraCleaner < BaseCleaner
   # Remove unnecessary complications, leaving the structure for analysis
   def initialize
     super
+    @cleaners += [method(:clean_function_declarations_from),
+                  method(:clean_catches_from)]
   end
 
   def clean_function_declarations_from code
