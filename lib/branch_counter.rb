@@ -19,6 +19,7 @@ class BranchCounter
                SimpleNewCleaner.new,
                ConstDeclarationCleaner.new,
                FunctionDeclarationCleaner.new,
+               ElseIfCleaner.new,
                CatchCleaner.new]
       end
     end

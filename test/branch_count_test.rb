@@ -85,4 +85,10 @@ class SimpleSnippetBranchCountTest < Minitest::Test
     branch_counter = BranchCounter.new( code )
     assert_equal 2, branch_counter.branches
   end
+
+  def test_finds_no_branches_for_if
+    code = "  if (x == 0) {"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 0, branch_counter.branches
+  end
 end
