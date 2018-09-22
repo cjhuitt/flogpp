@@ -93,14 +93,6 @@ class ExtraCleaner < BaseCleaner
                   method(:clean_catches_from)]
   end
 
-  def clean_function_declarations_from code
-    code.gsub(FUNCTION_DECLARATION, "{")
-  end
-
-  def clean_catches_from code
-    code.gsub(CATCH_BLOCK, "")
-  end
-
   private
     FUNCTION_DECLARATION =
             /\b[[:word:]]+ # return type
@@ -112,9 +104,17 @@ class ExtraCleaner < BaseCleaner
              {             # open brace
             /x
 
+    def clean_function_declarations_from code
+      code.gsub(FUNCTION_DECLARATION, "{")
+    end
+
     CATCH_BLOCK =
             /\bcatch        # catch keyword
              [[:space:]]*   # any amount of space
              \(.*\)        # parenthesis and anything inside them
             /x
+
+    def clean_catches_from code
+      code.gsub(CATCH_BLOCK, "")
+    end
 end
