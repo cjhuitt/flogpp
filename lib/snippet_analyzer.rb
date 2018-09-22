@@ -116,19 +116,36 @@ class SnippetAnalyzer
       end
   end
 
+  class BranchCounter
+    attr_reader :branches
+
+    def initialize code
+      @branches = 0
+
+      cleaner = Cleaner.new code
+      code = cleaner.clean_function_declarations_from cleaner.cleaned_code
+      code = cleaner.clean_catches_from code
+
+      check_branches_in code
+    end
+
+    private
+      def check_branches_in code
+        @branches += code.scan(/\b[[:word:]]+[[:space:]]*\([^()]*\)/).size
+        @branches += code.scan(/\snew\s/).size * 2
+        @branches += code.scan(/\sdelete\s/).size * 2
+        @branches += code.scan("goto").size * 3
+      end
+  end
+
   def initialize code
     @assignments = AssignmentCounter.new(code).assignments
-    @branches = 0
+    @branches = BranchCounter.new(code).branches
     @conditionals = 0
 
     cleaner = Cleaner.new code
 
     check_conditionals_in cleaner.cleaned_code
-
-    code = cleaner.clean_function_declarations_from cleaner.cleaned_code
-    code = cleaner.clean_catches_from code
-
-    check_branches_in code
   end
 
   def score
@@ -136,13 +153,6 @@ class SnippetAnalyzer
   end
 
   private
-    def check_branches_in code
-      @branches += code.scan(/\b[[:word:]]+[[:space:]]*\([^()]*\)/).size
-      @branches += code.scan(/\snew\s/).size * 2
-      @branches += code.scan(/\sdelete\s/).size * 2
-      @branches += code.scan("goto").size * 3
-    end
-
     def check_conditionals_in code
       @conditionals += code.scan("catch").size
       @conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
