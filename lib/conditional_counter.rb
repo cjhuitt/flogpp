@@ -1,14 +1,25 @@
-require_relative "cleaner"
+require_relative "cleaner_collection"
 
 class ConditionalCounter
   attr_reader :conditionals
 
   def initialize code
-    cleaner = BaseCleaner.new
+    cleaner = Cleaners.new
     @conditionals = check_conditionals_in cleaner.clean code
   end
 
   private
+    class Cleaners < CleanerCollection
+      def initialize
+        super [CommentCleaner.new,
+               ScopeCleaner.new,
+               SimplePointerRedirectCleaner.new,
+               SimpleMemberAccessCleaner.new,
+               SimpleNewCleaner.new,
+               ConstDeclarationCleaner.new]
+      end
+    end
+
     def check_conditionals_in code
       conditionals  = code.scan("catch").size
       conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
