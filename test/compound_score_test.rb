@@ -33,7 +33,6 @@ class CompoundAnalyzerScoreTest < Minitest::Test
   end
 
   def test_score_recursive_fibonacci
-    skip
     code = <<-CODE
     if (x == 1) {
         return 1;
