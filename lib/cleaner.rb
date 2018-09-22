@@ -1,4 +1,4 @@
-class Cleaner
+class BaseCleaner
   # Remove unnecessary complications, leaving the structure for analysis
   def initialize
     @cleaners = [method(:clean_comments_from),
@@ -13,14 +13,6 @@ class Cleaner
     cleaned = code
     @cleaners.each { |c| cleaned = c.call cleaned }
     cleaned
-  end
-
-  def clean_function_declarations_from code
-    code.gsub(FUNCTION_DECLARATION, "{")
-  end
-
-  def clean_catches_from code
-    code.gsub(CATCH_BLOCK, "")
   end
 
   private
@@ -76,6 +68,38 @@ class Cleaner
       code.gsub(CONST_VARIABLE_DECLARATION, "")
     end
 
+    FUNCTION_DECLARATION =
+            /\b[[:word:]]+ # return type
+             [[:space:]]+
+             [[:word:]]+   # function name
+             [[:space:]]*
+             \(.*\)        # optional parameters inside parenthesis
+             [[:space:]]*
+             {             # open brace
+            /x
+
+    CATCH_BLOCK =
+            /\bcatch        # catch keyword
+             [[:space:]]*   # any amount of space
+             \(.*\)        # parenthesis and anything inside them
+            /x
+end
+
+class Cleaner < BaseCleaner
+  # Remove unnecessary complications, leaving the structure for analysis
+  def initialize
+    super
+  end
+
+  def clean_function_declarations_from code
+    code.gsub(FUNCTION_DECLARATION, "{")
+  end
+
+  def clean_catches_from code
+    code.gsub(CATCH_BLOCK, "")
+  end
+
+  private
     FUNCTION_DECLARATION =
             /\b[[:word:]]+ # return type
              [[:space:]]+
