@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../lib/snippet_analyzer'
+require_relative '../lib/branch_counter'
 
 class SimpleSnippetBranchCountTest < Minitest::Test
   def test_finds_zero_branches_for_empty_function

@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../lib/snippet_analyzer'
+require_relative '../lib/conditional_counter'
 
 class SimpleSnippetConditionCountTest < Minitest::Test
   def test_finds_zero_conditionals_for_empty_function

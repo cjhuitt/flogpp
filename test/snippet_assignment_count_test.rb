@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../lib/snippet_analyzer'
+require_relative '../lib/assignment_counter'
 
 class SimpleSnippetAssignmentCountTest < Minitest::Test
   def test_finds_zero_assignments_for_empty_function
