@@ -4,8 +4,8 @@ class BranchCounter
   attr_reader :branches
 
   def initialize code
-    cleaner = Cleaner.new code
-    code = cleaner.clean_function_declarations_from cleaner.cleaned_code
+    cleaner = Cleaner.new
+    code = cleaner.clean_function_declarations_from cleaner.clean code
     code = cleaner.clean_catches_from code
 
     @branches = check_branches_in code
