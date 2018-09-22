@@ -91,4 +91,10 @@ class SimpleSnippetBranchCountTest < Minitest::Test
     branch_counter = BranchCounter.new( code )
     assert_equal 0, branch_counter.branches
   end
+
+  def test_finds_no_branches_for_for
+    code = "  for (unsigned int i = 1; i < n; ++i) {"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 0, branch_counter.branches
+  end
 end
