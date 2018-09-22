@@ -16,6 +16,7 @@ class ConditionalCounter
                SimplePointerRedirectCleaner.new,
                SimpleMemberAccessCleaner.new,
                SimpleNewCleaner.new,
+               ElseIfCleaner.new,
                ConstDeclarationCleaner.new]
       end
     end

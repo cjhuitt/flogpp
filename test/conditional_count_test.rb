@@ -103,4 +103,10 @@ class SimpleSnippetConditionCountTest < Minitest::Test
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
+
+  def test_finds_no_conditionals_for_else_if
+    code = "    else if ( a )"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
 end

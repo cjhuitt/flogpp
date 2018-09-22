@@ -3,7 +3,7 @@ require_relative 'cleaner'
 # Removes if or else if constructs from the code base
 class IfCleaner < Cleaner
   def clean code
-    code.gsub(IF_OR_ELSE_IF_CONSTRUCT, "{")
+    code.gsub(IF_OR_ELSE_IF_CONSTRUCT, "")
   end
 
   private

@@ -1,14 +1,15 @@
 require_relative 'cleaner'
 
+# removes the 'else if' keywords from the code
 class ElseIfCleaner < Cleaner
   def clean code
-    code.gsub(IF_OR_ELSE_IF_CONSTRUCT, "{")
+    code.gsub(ELSE_IF_CONSTRUCT, "")
   end
 
   private
-    IF_OR_ELSE_IF_CONSTRUCT =
+    ELSE_IF_CONSTRUCT =
             /\b
-             (else[[:space:]]+)? #optional else prior to if
+             else[[:space:]]+
              if\b
              [[:space:]]*
             /x
