@@ -4,7 +4,7 @@ class ConditionalCounter
   attr_reader :conditionals
 
   def initialize code
-    cleaner = Cleaner.new
+    cleaner = BaseCleaner.new
     @conditionals = check_conditionals_in cleaner.clean code
   end
 

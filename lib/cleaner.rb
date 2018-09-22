@@ -85,7 +85,7 @@ class BaseCleaner
             /x
 end
 
-class Cleaner < BaseCleaner
+class ExtraCleaner < BaseCleaner
   # Remove unnecessary complications, leaving the structure for analysis
   def initialize
     super
