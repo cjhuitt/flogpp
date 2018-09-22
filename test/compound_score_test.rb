@@ -49,27 +49,18 @@ class CompoundAnalyzerScoreTest < Minitest::Test
   def test_score_iterative_fibonacci
     code = <<-CODE
     unsigned long fib(unsigned int n) {
-        if (n == 0) return 0;
-        unsigned long previous = 0;
-        unsigned long current = 1;
-        for (unsigned int i = 1; i < n; ++i) {
-            unsigned long next = previous + current;
-            previous = current;
-            current = next;
+        if (n == 0) return 0;                        // 1 conditional
+        unsigned long previous = 0;                  // 1 assignment
+        unsigned long current = 1;                   // 1 assignment
+        for (unsigned int i = 1; i < n; ++i) {       // 2 assignments (=. ++), 1 conditional
+            unsigned long next = previous + current; // 1 assignment
+            previous = current;                      // 1 assignment
+            current = next;                          // 1 assignment
         }
         return current;
     }
     CODE
-      #cleaner = SnippetAnalyzer::Cleaner.new code
-      #cleaned = cleaner.cleaned_code
-      #cleaned = cleaner.clean_function_declarations_from cleaner.cleaned_code
-      #puts cleaned.scan(/\b\w+\s*(<<=|>>=)\s*\w+\b/).size
-      #puts cleaned.scan(/[^!=><]\s*=\s*[^!=]/).size
-      #puts cleaned.scan("++").size
-      #puts cleaned.scan("--").size
     compound_analyzer = CompoundAnalyzer.new code
-      #snippet = SnippetAnalyzer.new code
-      #assert_equal 6, snippet.assignments
     assert_equal 9, compound_analyzer.score
   end
 end
