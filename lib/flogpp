@@ -1,0 +1,87 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+require_relative 'compound_analyzer'
+require_relative 'function_splitter'
+
+options = {}
+OptionParser.new do |opts|
+  opts.program_name = "flogpp"
+  opts.version = "1.0a"
+  opts.banner = "Usage: flogpp [options] [files ...]"
+  opts.separator "Analyze the given files for how tortured the code is."
+  opts.separator "If no files are given, it will search for common c/cpp extensions from the"
+  opts.separator "current directory."
+  opts.separator ""
+
+  opts.on("-v", "--version", "Display version") do
+    puts "flogpp version 1.0a"
+    exit
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+files = Array.new
+ARGV.each do |a|
+  file = File.absolute_path a
+  if !File.file? file
+    puts "Unable to find #{file}"
+    next
+  end
+  files << file
+end
+
+if files.empty?
+  files  = Dir.glob File.join("**", "*.c")
+  files += Dir.glob File.join("**", "*.cpp")
+  files += Dir.glob File.join("**", "*.cc")
+  files += Dir.glob File.join("**", "*.cxx")
+  files += Dir.glob File.join("**", "*.h")
+  files += Dir.glob File.join("**", "*.hh")
+end
+
+functions = Array.new
+MEBIBYTE = 1048576
+files.each do |file|
+  if File.size(file) > 10 * MEBIBYTE
+    puts "#{file} too large; skipping"
+    next
+  end
+
+  splitter = FunctionSplitter.new file, File.read(file)
+  functions += splitter.functions
+end
+
+total_score = 0
+analyzed = Hash.new
+scored_files = Hash.new 0
+functions.each do |function|
+  analyzer = CompoundAnalyzer.new(function.contents)
+  score = analyzer.score
+  analyzed[function] = analyzer
+  scored_files[function.filename] += score
+  total_score += score
+end
+
+puts "%8.1f: Flog total" % total_score
+puts "%8.1f: Flog average/file" % (total_score / scored_files.size) if scored_files.size > 1
+puts "%8.1f: Flog average/function" % (total_score / functions.size)
+puts ""
+
+if scored_files.size > 1
+  top = scored_files.max_by(5) { |filename, score| score }
+  top.each do |entry|
+    puts "%8.1f: #{entry[0]}" % entry[1]
+  end
+  puts ""
+end
+
+top = analyzed.max_by(5) { |function, analyzer| analyzer.score }
+top.each do |entry|
+  puts "%8.1f: #{entry[0].name} (#{entry[0].filename}:#{entry[0].line})" % entry[1].score
+end
