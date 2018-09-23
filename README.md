@@ -26,3 +26,6 @@ the more pain the code is in.
     47.0: OTWaitForChars (test/files/eudora_tcp.c:274)
     43.0: initStream (test/files/CloudFS_replicator.c:138)
 ```
+
+## License
+MIT License
