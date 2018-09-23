@@ -17,13 +17,37 @@ OptionParser.new do |opts|
   opts.separator "current directory."
   opts.separator ""
 
-  opts.on("-v", "--version", "Display version") do
-    puts "flogpp version 1.0a"
-    exit
+  opts.on("-a", "--all", "Show the entire list of file or function information (default worst 10%)") do
+    options[:all] = true
+  end
+
+  opts.on("-f", "--[no-]files", "Show the file summary information") do |f|
+    options[:file_summary] = f
   end
 
   opts.on("-h", "--help", "Prints this help") do
     puts opts
+    exit
+  end
+
+  opts.on("-mCOUNT", "--max COUNT", Integer, "(Maximum) number of the worst files or functions to show (default worst 10%)") do |c|
+    options[:max_count] = c
+  end
+
+  opts.on("-pCOUNT", "--percent COUNT", Integer, "(Maximum) percent of the worst files or functions to show (default worst 10%)") do |c|
+    if !c.between?( 0, 100)
+      puts "Invalid percent given (must be between 0 and 100)"
+      exit 1
+    end
+    options[:max_percent] = c
+  end
+
+  opts.on("-s", "--score", "Show only the score summaries and averages") do
+    options[:score] = true
+  end
+
+  opts.on("-v", "--version", "Display version") do
+    puts "flogpp version 1.0a"
     exit
   end
 end.parse!
@@ -71,11 +95,13 @@ if files.empty?
 end
 
 set = FileSet.new files
-file_stats = FileStats.new set.scored_files, set.total_score
-function_stats = FunctionStats.new set.analyzed, set.total_score
+file_stats = FileStats.new set.scored_files, set.total_score, options
+function_stats = FunctionStats.new set.analyzed, set.total_score, options
 writer = OutputWriter.new
 
 writer.write_header set.total_score, file_stats, function_stats
-writer.write_separator
-writer.write_file_summary file_stats
-writer.write_function_summary function_stats
+if not options[:score]
+  writer.write_separator
+  writer.write_file_summary file_stats if options[:file_summary]
+  writer.write_function_summary function_stats
+end

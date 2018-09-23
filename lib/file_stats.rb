@@ -1,19 +1,15 @@
-class FileStats
-  def initialize scored_files, total_score
-    @scored_files = scored_files
-    @total_score = total_score
+require_relative 'stats'
+
+class FileStats < Stats
+  attr_reader :worst
+
+  def initialize collection, total, options
+    super collection, total
+    @worst = find_worst_by worst_count options
   end
 
-  def multiple_files?
-    return @scored_files.size > 1
-  end
-
-  def average_per_file
-    return 0 if @scored_files.empty?
-    @total_score / @scored_files.size
-  end
-
-  def worst_files count=5
-    @scored_files.max_by(count) { |filename, score| score }
-  end
+  private
+    def find_worst_by count
+      @collection.max_by(count) { |filename, score| score }
+    end
 end

@@ -1,19 +1,15 @@
-class FunctionStats
-  def initialize analyzed, total_score
-    @analyzed = analyzed
-    @total_score = total_score
+require_relative 'stats'
+
+class FunctionStats < Stats
+  attr_reader :worst
+
+  def initialize collection, total, options
+    super collection, total
+    @worst = find_worst_by worst_count options
   end
 
-  def multiple_functions?
-    return @analyzed.size > 1
-  end
-
-  def average_per_function
-    return 0 if @analyzed.empty?
-    @total_score / @analyzed.size
-  end
-
-  def worst_functions count=5
-    @analyzed.max_by(count) { |function, analyzer| analyzer.score }
-  end
+  private
+    def find_worst_by count
+      @collection.max_by(count) { |function, analyzer| analyzer.score }
+    end
 end
