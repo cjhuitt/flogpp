@@ -8,6 +8,7 @@ require_relative 'function_stats'
 require_relative 'output_writer'
 
 options = {}
+options[:extensions] = ["c", "cpp", "cc", "cxx", "h", "hh"]
 OptionParser.new do |opts|
   opts.program_name = "flogpp"
   opts.version = "1.0a"
@@ -19,6 +20,10 @@ OptionParser.new do |opts|
 
   opts.on("-a", "--all", "Show the entire list of file or function information (default worst 10%)") do
     options[:all] = true
+  end
+
+  opts.on("-e", "--ex", "--extensions a,b,c", Array, "Search for files with the given extension(s) (default c,cpp,cc,cxx,h,hh)") do |exts|
+    options[:extensions] = exts
   end
 
   opts.on("-f", "--[no-]files", "Show the file summary information") do |f|
@@ -52,7 +57,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-def get_files
+def get_files extensions
   files = Array.new
   ARGV.each do |a|
     file = File.absolute_path a
@@ -64,12 +69,10 @@ def get_files
   end
 
   if files.empty?
-    files  = Dir.glob File.join("**", "*.c")
-    files += Dir.glob File.join("**", "*.cpp")
-    files += Dir.glob File.join("**", "*.cc")
-    files += Dir.glob File.join("**", "*.cxx")
-    files += Dir.glob File.join("**", "*.h")
-    files += Dir.glob File.join("**", "*.hh")
+    files  = Array.new
+    extensions.each do |ext|
+            files += Dir.glob File.join("**", "*.#{ext}")
+    end
   end
   files
 end
@@ -88,7 +91,7 @@ def filter_files files
   filtered
 end
 
-files = filter_files get_files
+files = filter_files get_files options[:extensions]
 if files.empty?
   puts "No files to process."
   exit 1
