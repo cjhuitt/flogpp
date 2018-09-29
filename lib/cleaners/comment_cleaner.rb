@@ -4,6 +4,6 @@ class CommentCleaner
   end
 
   private
-    C_COMMENT = /\/\*.*\*\//
+    C_COMMENT = /\/\*.*?\*\//m
     CPP_COMMENT = /\/\/.*$/
 end
