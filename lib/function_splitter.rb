@@ -1,3 +1,5 @@
+require_relative "function_definition_matcher"
+
 class FunctionSplitter
   attr_reader :functions
 
@@ -8,7 +10,7 @@ class FunctionSplitter
     attr        :contents
 
     def initialize name, filename, line=0
-      @name = name.match(FUNCTION_DEFINITION)[1]
+      @name = name
       @line = line
       @contents = String.new
       @filename = filename
@@ -42,9 +44,10 @@ class FunctionSplitter
           name += chunk
         end
         if chunk == '{'
-          if name.match?(FUNCTION_DEFINITION)
+          matcher = FunctionDefinitionMatcher.new name
+          if matcher.passes?
             startline = startline + name.lines.size - 1
-            function = Function.new name, filename, startline
+            function = Function.new matcher.name, filename, startline
             nest_level = 1
           else
             chunk += name
@@ -53,13 +56,4 @@ class FunctionSplitter
       end
     end
   end
-
-  private
-    FUNCTION_DEFINITION =
-            /\b[[:word:]]+ # return type
-             [[:space:]]+
-             ([[:word:]]+) # function name
-             [[:space:]]*
-             \(.*\)        # optional parameters inside parenthesis
-            /mx
 end
