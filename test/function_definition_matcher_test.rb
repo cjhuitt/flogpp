@@ -41,5 +41,41 @@ class FunctionDefinitionMatcherTest < Minitest::Test
     assert matcher.passes?
     assert_equal "foo", matcher.name
   end
+
+  def test_function_definition_with_pointer_type
+    code = <<-CODE
+      void *handleHttpClients(void *data)
+      {
+    CODE
+    matcher = FunctionDefinitionMatcher.new code
+    assert matcher.passes?
+    assert_equal "handleHttpClients", matcher.name
+  end
+
+  def test_function_definition_with_previous_declaration
+    code = <<-CODE
+      void *diskWorker(void *vdisk);
+      pthread_t createThread(void *(*start_routine) (void *), void *arg)
+      {
+    CODE
+    matcher = FunctionDefinitionMatcher.new code
+    assert matcher.passes?
+    assert_equal "createThread", matcher.name
+  end
+
+  def test_function_definition_with_parenthetic_comment
+    code = <<-CODE
+      /*
+      modification, are permitted (subject to the limitations in the
+      disclaimer below) provided that the following conditions are met:
+      */
+
+      pthread_t createThread(void *(*start_routine) (void *), void *arg)
+      {
+    CODE
+    matcher = FunctionDefinitionMatcher.new code
+    assert matcher.passes?
+    assert_equal "createThread", matcher.name
+  end
 end
 
