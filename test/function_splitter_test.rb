@@ -45,6 +45,8 @@ class FunctionSplitterTest < Minitest::Test
     CODE
     splitter = FunctionSplitter.new "foo.c", code
     assert_equal 2, splitter.functions.size
+    assert_equal 1, splitter.functions[0].line
+    assert_equal 2, splitter.functions[1].line
   end
 
   def test_finds_one_functions_when_nested
@@ -84,6 +86,19 @@ class FunctionSplitterTest < Minitest::Test
     assert_equal 8, splitter.functions.first.line
   end
 
+  def test_start_line_is_on_open_brace
+    code = <<-CODE
+      void
+        foo
+        ( )
+
+        {
+        }
+    CODE
+    splitter = FunctionSplitter.new "foo.c", code
+    assert_equal 5, splitter.functions.first.line
+  end
+
   def test_finds_second_function_start_line
     code = <<-CODE
       #include "bar.h"
@@ -115,6 +130,7 @@ class FunctionSplitterTest < Minitest::Test
     CODE
     splitter = FunctionSplitter.new "foo.c", code
     assert_equal 2, splitter.functions.size
+    assert_equal 7, splitter.functions[1].line
   end
 
   def test_remembers_function_contents
@@ -136,6 +152,30 @@ class FunctionSplitterTest < Minitest::Test
     CODE
     splitter = FunctionSplitter.new "foo.c", code
     assert_equal "foo.c", splitter.functions.first.filename
+  end
+
+  def test_finds_correct_line_when_previous_functions_have_multiline_contents
+    code = <<-CODE
+      void foo() {
+          const int a = 100;
+          const int b = 100;
+          const int c = 100;
+      }
+      void bar() { }
+    CODE
+    splitter = FunctionSplitter.new "foo.c", code
+    assert_equal 6, splitter.functions[1].line
+  end
+
+  def test_finds_correct_line_when_brace_is_immediately_after_linebreak
+    code = <<-CODE
+
+pthread_t createThread(void *(*start_routine) (void *), void *arg)
+{
+}
+    CODE
+    splitter = FunctionSplitter.new "foo.c", code
+    assert_equal 3, splitter.functions[0].line
   end
 end
 

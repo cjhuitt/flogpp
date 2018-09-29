@@ -9,7 +9,7 @@ class FunctionSplitter
     attr_reader :filename
     attr        :contents
 
-    def initialize name, filename, line=0
+    def initialize name, filename, line
       @name = name
       @line = line
       @contents = String.new
@@ -26,8 +26,11 @@ class FunctionSplitter
     startline = 1
     until chunks.empty?
       chunk = chunks.shift
+      startline += chunk.lines.count - 1
+      startline += 1 if chunk[-1] == "\n"
       if function
         if chunk == '{'
+          function.contents << chunk if nest_level != 0
           nest_level += 1
         elsif chunk == '}'
           nest_level -= 1
@@ -35,9 +38,11 @@ class FunctionSplitter
             @functions << function
             function = nil
             name = String.new
+          else
+            function.contents << chunk
           end
         else
-          function.contents << chunk.strip
+          function.contents << chunk
         end
       else
         if chunk != '{'
@@ -46,7 +51,6 @@ class FunctionSplitter
         if chunk == '{'
           matcher = FunctionDefinitionMatcher.new name
           if matcher.passes?
-            startline = startline + name.lines.size - 1
             function = Function.new matcher.name, filename, startline
             nest_level = 1
           else
