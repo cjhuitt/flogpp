@@ -1,8 +1,6 @@
-require_relative 'cleaner'
-
 # Removes if or else if constructs from the code base
-class IfCleaner < Cleaner
-  def clean code
+class IfCleaner
+  def self.Clean code
     code.gsub(IF_OR_ELSE_IF_CONSTRUCT, "")
   end
 

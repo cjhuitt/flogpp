@@ -11,13 +11,13 @@ class ConditionalCounter
   private
     class Cleaners < CleanerCollection
       def initialize
-        super [CommentCleaner.new,
-               ScopeCleaner.new,
-               SimplePointerRedirectCleaner.new,
-               SimpleMemberAccessCleaner.new,
-               SimpleNewCleaner.new,
-               ElseIfCleaner.new,
-               ConstDeclarationCleaner.new]
+        super [CommentCleaner,
+               ScopeCleaner,
+               SimplePointerRedirectCleaner,
+               SimpleMemberAccessCleaner,
+               SimpleNewCleaner,
+               ElseIfCleaner,
+               ConstDeclarationCleaner]
       end
     end
 

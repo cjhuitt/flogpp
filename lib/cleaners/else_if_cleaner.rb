@@ -1,8 +1,6 @@
-require_relative 'cleaner'
-
 # removes the 'else if' keywords from the code
-class ElseIfCleaner < Cleaner
-  def clean code
+class ElseIfCleaner
+  def self.Clean code
     code.gsub(ELSE_IF_CONSTRUCT, "")
   end
 

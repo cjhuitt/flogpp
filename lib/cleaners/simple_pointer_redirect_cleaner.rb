@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class SimplePointerRedirectCleaner < Cleaner
-  def clean code
+class SimplePointerRedirectCleaner
+  def self.Clean code
     code.gsub(SIMPLE_POINTER_REDIRECTION, "")
   end
 

@@ -12,14 +12,14 @@ class AssignmentCounter
     class Cleaners < CleanerCollection
       # Remove unnecessary complications, leaving the structure for analysis
       def initialize
-        super [CommentCleaner.new,
-               ScopeCleaner.new,
-               SimplePointerRedirectCleaner.new,
-               SimpleMemberAccessCleaner.new,
-               SimpleNewCleaner.new,
-               ConstDeclarationCleaner.new,
-               FunctionDeclarationCleaner.new,
-               CatchCleaner.new]
+        super [CommentCleaner,
+               ScopeCleaner,
+               SimplePointerRedirectCleaner,
+               SimpleMemberAccessCleaner,
+               SimpleNewCleaner,
+               ConstDeclarationCleaner,
+               FunctionDeclarationCleaner,
+               CatchCleaner]
       end
     end
 

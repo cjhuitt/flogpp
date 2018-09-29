@@ -8,7 +8,7 @@ class CleanerCollection
   # Remove unnecessary complications, leaving the structure for analysis
   def clean code
     cleaned = code
-    @cleaners.each { |c| cleaned = c.clean cleaned }
+    @cleaners.each { |c| cleaned = c::Clean cleaned }
     cleaned
   end
 end

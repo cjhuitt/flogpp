@@ -1,8 +1,6 @@
-require_relative 'cleaner'
-
 # Removes for constructs from the code base
-class ForCleaner < Cleaner
-  def clean code
+class ForCleaner
+  def self.Clean code
     code.gsub(FOR_CONSTRUCT, "")
   end
 

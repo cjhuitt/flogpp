@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class ConstDeclarationCleaner < Cleaner
-  def clean code
+class ConstDeclarationCleaner
+  def self.Clean code
     code.gsub(CONST_VARIABLE_DECLARATION, "")
   end
 

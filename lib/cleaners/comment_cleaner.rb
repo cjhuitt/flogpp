@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class CommentCleaner < Cleaner
-  def clean code
+class CommentCleaner
+  def self.Clean code
     code.gsub(CPP_COMMENT, "").gsub(C_COMMENT, "")
   end
 

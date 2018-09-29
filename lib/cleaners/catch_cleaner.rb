@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class CatchCleaner < Cleaner
-  def clean code
+class CatchCleaner
+  def self.Clean code
     code.gsub(CATCH_BLOCK, "")
   end
 

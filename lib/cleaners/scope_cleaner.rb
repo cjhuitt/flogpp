@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class ScopeCleaner < Cleaner
-  def clean code
+class ScopeCleaner
+  def self.Clean code
     code.gsub(SCOPE, "")
   end
 

@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class FunctionDeclarationCleaner < Cleaner
-  def clean code
+class FunctionDeclarationCleaner
+  def self.Clean code
     code.gsub(FUNCTION_DECLARATION, "{")
   end
 

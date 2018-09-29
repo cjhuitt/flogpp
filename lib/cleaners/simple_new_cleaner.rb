@@ -1,7 +1,5 @@
-require_relative 'cleaner'
-
-class SimpleNewCleaner < Cleaner
-  def clean code
+class SimpleNewCleaner
+  def self.Clean code
     code.gsub(SIMPLE_NEW_WITH_PARENS, "\\1")
   end
 

@@ -12,16 +12,16 @@ class BranchCounter
     class Cleaners < CleanerCollection
       # Remove unnecessary complications, leaving the structure for analysis
       def initialize
-        super [CommentCleaner.new,
-               ScopeCleaner.new,
-               SimplePointerRedirectCleaner.new,
-               SimpleMemberAccessCleaner.new,
-               SimpleNewCleaner.new,
-               ConstDeclarationCleaner.new,
-               FunctionDeclarationCleaner.new,
-               IfCleaner.new,
-               ForCleaner.new,
-               CatchCleaner.new]
+        super [CommentCleaner,
+               ScopeCleaner,
+               SimplePointerRedirectCleaner,
+               SimpleMemberAccessCleaner,
+               SimpleNewCleaner,
+               ConstDeclarationCleaner,
+               FunctionDeclarationCleaner,
+               IfCleaner,
+               ForCleaner,
+               CatchCleaner]
       end
     end
 

@@ -1,8 +1,6 @@
-require_relative 'cleaner'
-
-class SimpleMemberAccessCleaner < Cleaner
+class SimpleMemberAccessCleaner
   # Note this also removes decimals from constant float/doubles, but \shrug
-  def clean code
+  def self.Clean code
     code.gsub(SIMPLE_MEMBER_ACCESS, "")
   end
 
