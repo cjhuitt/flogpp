@@ -1,40 +1,40 @@
 class ScoreFormatter
-  def self.Format score
+  def self.FormatWhole score
     return "%8d" % score
   end
 
-  def self.FormatAvg score
+  def self.FormatFloat score
     return "%8.1f" % score
   end
 end
 
 class AssignmentsScoreFormatter
   def self.Format score
-    ScoreFormatter::Format(score.assignments) + "a"
+    ScoreFormatter::FormatWhole(score.assignments) + "a"
   end
 
   def self.FormatAvg score
-    ScoreFormatter::FormatAvg(score.assignments) + "a"
+    ScoreFormatter::FormatFloat(score.assignments) + "a"
   end
 end
 
 class BranchesScoreFormatter
   def self.Format score
-    ScoreFormatter::Format(score.branches) + "b"
+    ScoreFormatter::FormatWhole(score.branches) + "b"
   end
 
   def self.FormatAvg score
-    ScoreFormatter::FormatAvg(score.branches) + "b"
+    ScoreFormatter::FormatFloat(score.branches) + "b"
   end
 end
 
 class ConditionalsScoreFormatter
   def self.Format score
-    ScoreFormatter::Format(score.conditionals) + "c"
+    ScoreFormatter::FormatWhole(score.conditionals) + "c"
   end
 
   def self.FormatAvg score
-    ScoreFormatter::FormatAvg(score.conditionals) + "c"
+    ScoreFormatter::FormatFloat(score.conditionals) + "c"
   end
 end
 
@@ -50,10 +50,10 @@ end
 
 class OverallScoreFormatter
   def self.Format score
-    ScoreFormatter::Format score.overall
+    ScoreFormatter::FormatFloat score.overall
   end
 
   def self.FormatAvg score
-    ScoreFormatter::FormatAvg score.overall
+    ScoreFormatter::FormatFloat score.overall
   end
 end
