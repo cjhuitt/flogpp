@@ -1,13 +1,13 @@
 require_relative "assignment_counter"
 require_relative "branch_counter"
 require_relative "conditional_counter"
+require_relative "score"
 
-class SnippetAnalyzer
-  attr_reader :score
-
+class SnippetAnalyzer < Score
   def initialize code
-    @score = AssignmentCounter.new(code).assignments
-    @score += BranchCounter.new(code).branches
-    @score += ConditionalCounter.new(code).conditionals
+    super
+    @assignments = AssignmentCounter.new(code).assignments
+    @branches = BranchCounter.new(code).branches
+    @conditionals = ConditionalCounter.new(code).conditionals
   end
 end

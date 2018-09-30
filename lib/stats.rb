@@ -1,10 +1,24 @@
 class Stats
   attr_reader :average
+  attr_reader :worst
 
-  def initialize collection, total
+  def initialize collection, total, options
     @collection = collection
     @total = total
     @average = find_average
+    count = worst_count options
+    @worst = @collection.max_by(count) { |filename, score|
+    case options[:rank]
+    when :assignments
+        Stats::AssignmentsScore score
+    when :branches
+      Stats::BranchesScore score
+    when :conditionals
+      Stats::ConditionalsScore score
+    else
+      Stats::OverallScore score
+    end
+    }
   end
 
   def multiple?
@@ -18,7 +32,7 @@ class Stats
     end
 
     def worst_count options
-      return @collection.size if options[:all]
+      return @collection.size if options[:full]
       if !options[:max_percent] and !options[:max_count]
         return [@collection.size/10.round, 1].max
       end
@@ -29,4 +43,19 @@ class Stats
       [percent, count].max
     end
 
+    def self.AssignmentsScore score
+      score.assignments
+    end
+
+    def self.BranchesScore score
+      score.branches
+    end
+
+    def self.ConditionalsScore score
+      score.conditionals
+    end
+
+    def self.OverallScore score
+      score.overall
+    end
 end

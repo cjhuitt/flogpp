@@ -3,12 +3,12 @@
 require 'optparse'
 
 require_relative 'file_set'
-require_relative 'file_stats'
-require_relative 'function_stats'
 require_relative 'output_writer'
+require_relative 'stats'
 
 options = {}
 options[:extensions] = ["c", "cpp", "cc", "cxx", "h", "hh"]
+options[:rank] = :overall
 OptionParser.new do |opts|
   opts.program_name = "flogpp"
   opts.version = "1.0a"
@@ -18,16 +18,32 @@ OptionParser.new do |opts|
   opts.separator "current directory."
   opts.separator ""
 
-  opts.on("-a", "--all", "Show the entire list of file or function information (default worst 10%)") do
-    options[:all] = true
+  opts.on("-a", "--assignments", "Score by assignments only") do
+    options[:rank] = :assignments
+  end
+
+  opts.on("-b", "--branches", "Score by branches only") do
+    options[:rank] = :branches
+  end
+
+  opts.on("-c", "--conditionals", "Score by conditionals only") do
+    options[:rank] = :conditionals
+  end
+
+  opts.on("-d", "--details", "Show detailed scores (assignments, branches, conditionals)") do
+    options[:details] = true
   end
 
   opts.on("-e", "--ex", "--extensions a,b,c", Array, "Search for files with the given extension(s) (default c,cpp,cc,cxx,h,hh)") do |exts|
     options[:extensions] = exts
   end
 
-  opts.on("-f", "--[no-]files", "Show the file summary information") do |f|
+  opts.on("--[no-]files", "Show the file summary information") do |f|
     options[:file_summary] = f
+  end
+
+  opts.on("-f", "--full", "Show the entire list of file or function information (default worst 10%)") do
+    options[:full] = true
   end
 
   opts.on("-h", "--help", "Prints this help") do
@@ -98,11 +114,23 @@ if files.empty?
 end
 
 set = FileSet.new files
-file_stats = FileStats.new set.scored_files, set.total_score, options
-function_stats = FunctionStats.new set.analyzed, set.total_score, options
-writer = OutputWriter.new
+file_stats = Stats.new set.scored_files, set.totals, options
+function_stats = Stats.new set.analyzed, set.totals, options
 
-writer.write_header set.total_score, file_stats, function_stats
+score_fmt = options[:details] ? DetailsScoreFormatter :
+    case options[:rank]
+    when :assignments
+      AssignmentsScoreFormatter
+    when :branches
+      BranchesScoreFormatter
+    when :conditionals
+      ConditionalsScoreFormatter
+    else
+      OverallScoreFormatter
+    end
+writer = OutputWriter.new score_fmt
+
+writer.write_header set.totals, file_stats, function_stats
 if not options[:score]
   writer.write_separator
   writer.write_file_summary file_stats if options[:file_summary]

@@ -1,9 +1,9 @@
-require_relative 'compound_analyzer'
 require_relative 'function_splitter'
+require_relative 'snippet_analyzer'
 
 class FileSet
   attr_reader :functions
-  attr_reader :total_score
+  attr_reader :totals
   attr_reader :analyzed
   attr_reader :scored_files
 
@@ -27,19 +27,18 @@ class FileSet
     def analyzers_for functions
       analyzed = Hash.new
       functions.each do |function|
-        analyzer = CompoundAnalyzer.new(function.contents)
+        analyzer = SnippetAnalyzer.new(function.contents)
         analyzed[function] = analyzer
       end
       analyzed
     end
 
     def score
-      @total_score = 0
-      @scored_files = Hash.new 0
+      @totals = Score.new
+      @scored_files = Hash.new { |hash, key| hash[key] = Score.new }
       @analyzed.each do |function, analyzer|
-        score = analyzer.score
-        @total_score += score
-        @scored_files[function.filename] += score
+        @totals += analyzer
+        @scored_files[function.filename] += analyzer
       end
     end
 end
