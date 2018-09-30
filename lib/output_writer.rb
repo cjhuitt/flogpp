@@ -9,8 +9,8 @@ class OutputWriter
 
   def write_header total_score, file_stats, function_stats
     puts "#{@score_fmt::Format total_score}: Total"
-    puts "#{@score_fmt::Format file_stats.average}: Average/file" if file_stats.multiple?
-    puts "#{@score_fmt::Format function_stats.average}: Average/function" if function_stats.multiple?
+    puts "#{@score_fmt::FormatAvg file_stats.average}: Average/file" if file_stats.multiple?
+    puts "#{@score_fmt::FormatAvg function_stats.average}: Average/function" if function_stats.multiple?
   end
 
   def write_separator
