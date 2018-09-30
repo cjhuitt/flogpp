@@ -1,21 +1,8 @@
+require_relative "function"
 require_relative "function_definition_matcher"
 
 class FunctionSplitter
   attr_reader :functions
-
-  class Function
-    attr_reader :name
-    attr_reader :line
-    attr_reader :filename
-    attr        :contents
-
-    def initialize name, filename, line
-      @name = name
-      @line = line
-      @contents = String.new
-      @filename = filename
-    end
-  end
 
   def initialize filename, code
     @functions = Array.new

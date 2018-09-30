@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require_relative '../lib/branch_counter'
 
-class SimpleSnippetBranchCountTest < Minitest::Test
+class BranchCounterTest < Minitest::Test
   def test_finds_zero_branches_for_empty_function
     code = "void foo() { }"
     branch_counter = BranchCounter.new( code )

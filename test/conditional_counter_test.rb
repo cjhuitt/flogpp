@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require_relative '../lib/conditional_counter'
 
-class SimpleSnippetConditionCountTest < Minitest::Test
+class ConditionalCounterTest < Minitest::Test
   def test_finds_zero_conditionals_for_empty_function
     code = "void foo() { }"
     conditional_counter = ConditionalCounter.new( code )

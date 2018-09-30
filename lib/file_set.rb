@@ -2,10 +2,9 @@ require_relative 'function_splitter'
 require_relative 'snippet_analyzer'
 
 class FileSet
-  attr_reader :functions
   attr_reader :totals
   attr_reader :analyzed
-  attr_reader :scored_files
+  attr_reader :scored
 
   def initialize files
     @functions = get_functions_for files
@@ -35,10 +34,10 @@ class FileSet
 
     def score
       @totals = Score.new
-      @scored_files = Hash.new { |hash, key| hash[key] = Score.new }
+      @scored = Hash.new { |hash, key| hash[key] = Score.new }
       @analyzed.each do |function, analyzer|
         @totals += analyzer
-        @scored_files[function.filename] += analyzer
+        @scored[function.filename] += analyzer
       end
     end
 end

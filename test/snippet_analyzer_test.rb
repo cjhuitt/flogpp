@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require_relative '../lib/snippet_analyzer'
 
-class SimpleSnippetScoreTest < Minitest::Test
+class SnippetAnalyzerTest < Minitest::Test
   def test_scores_zero_for_empty_function
     code = "void foo() { }"
     function_analyzer = SnippetAnalyzer.new( code )

@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require_relative '../lib/assignment_counter'
 
-class SimpleSnippetAssignmentCountTest < Minitest::Test
+class AssignmentCounterTest < Minitest::Test
   def test_finds_zero_assignments_for_empty_function
     code = "void foo() { }"
     assignment_counter = AssignmentCounter.new( code )
