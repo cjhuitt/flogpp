@@ -2,12 +2,12 @@ class Function
   attr_reader :name
   attr_reader :line
   attr_reader :filename
-  attr        :contents
+  attr_reader :contents
 
-  def initialize name, filename, line
+  def initialize name, filename, line, contents
     @name = name
     @line = line
-    @contents = String.new
+    @contents = contents
     @filename = filename
   end
 end
