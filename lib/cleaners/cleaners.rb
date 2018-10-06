@@ -1,3 +1,4 @@
+require_relative 'cast_cleaner'
 require_relative 'catch_cleaner'
 require_relative 'comment_cleaner'
 require_relative 'const_declaration_cleaner'

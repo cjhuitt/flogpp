@@ -24,6 +24,7 @@ class ConditionalCounter
     def check_conditionals_in code
       conditionals  = code.scan("catch").size
       conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
+      conditionals += code.scan(/\bif\b[[:space:]]*\([^=><)]+\)/).size
       conditionals += code.scan("else").size
       conditionals += code.scan("case").size
       conditionals += code.scan("default").size

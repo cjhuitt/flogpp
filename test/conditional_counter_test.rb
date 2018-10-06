@@ -33,37 +33,37 @@ class ConditionalCounterTest < Minitest::Test
   end
 
   def test_finds_one_conditional_for_equality_test
-    code = "    a == b"
+    code = "   if( a == b )"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
   def test_finds_one_conditional_for_inequality_test
-    code = "    a!=b"
+    code = "   if( a!=b )"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
   def test_finds_one_conditional_for_greater_or_equal_test
-    code = "a>= b"
+    code = "if(a>= b) "
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
   def test_finds_one_conditional_for_lesser_or_equal_test
-    code = "a <=b"
+    code = "if(a <=b)"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
   def test_finds_one_conditional_for_greater_than_test
-    code = "    a > b"
+    code = "  if(  a > b )"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
   def test_finds_one_conditional_for_lesser_than_test
-    code = "    a < b"
+    code = "  if(  a < b )"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
@@ -99,14 +99,14 @@ class ConditionalCounterTest < Minitest::Test
   end
 
   def test_finds_one_conditional_for_unary_conditional
-    code = "foo"
+    code = "if(foo)"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
 
-  def test_finds_no_conditionals_for_else_if
+  def test_finds_one_conditional_for_else_if_with_unary
     code = "    else if ( a )"
     conditional_counter = ConditionalCounter.new code
-    assert_equal 0, conditional_counter.conditionals
+    assert_equal 1, conditional_counter.conditionals
   end
 end

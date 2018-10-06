@@ -21,14 +21,28 @@ class BranchCounter
                FunctionDeclarationCleaner,
                IfCleaner,
                ForCleaner,
+               CastCleaner,
                CatchCleaner]
       end
     end
 
     def check_branches_in code
-      branches  = code.scan(/\b[[:word:]]+[[:space:]]*\([^()]*\)/).size
-      branches += code.scan(/\snew\s/).size * 2
-      branches += code.scan(/\sdelete\s/).size * 2
-      branches +  code.scan("goto").size * 3
+      branches  = BranchCounter::FindFunctions code
+
+      # malloc and free are already counted once as functions
+      branches += code.scan(/\b(aligned_)?malloc\b/).size
+      branches += code.scan(/\bfree\b/).size
+
+      branches += code.scan(/\bnew\b/).size * 2
+      branches += code.scan(/\bdelete\b/).size * 2
+
+      branches +  code.scan(/\bgoto\b/).size * 3
+    end
+
+    FUNCTION = /\b[[:word:]]+[[:space:]]*\([^()]*\)/
+    def self.FindFunctions code
+      functions = code.scan(FUNCTION)
+      return 0 if functions.empty?
+      functions.size + BranchCounter::FindFunctions(code.gsub FUNCTION, "")
     end
 end

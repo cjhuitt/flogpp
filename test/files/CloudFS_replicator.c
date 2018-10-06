@@ -78,6 +78,7 @@ Hash localHostId;
 List_Links diskList;
 List_Links httpClients;
 
+// (1a, 4b, 2c)
 pthread_t createThread(void *(*start_routine) (void *), void *arg)
 {
    pthread_t tid;
@@ -143,6 +144,7 @@ static int numPeers;
 
 static size_t data_callback(void *ptr, size_t size, size_t nmemb, void *data);
 
+// (3a, 3b, 3c)
 int sockOptCallback(void *clientp, curl_socket_t curlfd, curlsocktype purpose)
 {
    int size;
@@ -156,6 +158,7 @@ int sockOptCallback(void *clientp, curl_socket_t curlfd, curlsocktype purpose)
    return r;
 }
 
+// ( 20a, 30b, 6c)
 void initStream(StreamInfo * stream, DiskInfo * info, Hash hostId)
 {
    Bool haveDeviceNode = FALSE;

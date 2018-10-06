@@ -68,20 +68,38 @@ class BranchCounterTest < Minitest::Test
     assert_equal 1, branch_counter.branches
   end
 
-  def test_finds_three_branches_for_goto
+  def test_weights_goto_triple
     code = "    goto label;"
     branch_counter = BranchCounter.new( code )
     assert_equal 3, branch_counter.branches
   end
 
-  def test_finds_two_branches_for_new
+  def test_weights_new_double
     code = "    new AbraCadabra();"
     branch_counter = BranchCounter.new( code )
     assert_equal 2, branch_counter.branches
   end
 
-  def test_finds_two_branches_for_delete
+  def test_weights_delete_double
     code = "    delete pointer;"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 2, branch_counter.branches
+  end
+
+  def test_weights_malloc_double
+    code = "a = malloc(20);"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 2, branch_counter.branches
+  end
+
+  def test_weights_aligned_malloc_double
+    code = "a = aligned_malloc(20);"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 2, branch_counter.branches
+  end
+
+  def test_weights_free_double
+    code = "free(a);"
     branch_counter = BranchCounter.new( code )
     assert_equal 2, branch_counter.branches
   end
@@ -96,5 +114,17 @@ class BranchCounterTest < Minitest::Test
     code = "  for (unsigned int i = 1; i < n; ++i) {"
     branch_counter = BranchCounter.new( code )
     assert_equal 0, branch_counter.branches
+  end
+
+  def test_finds_both_branches_for_nested_functions
+    code = "foo(bar(e));"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 2, branch_counter.branches
+  end
+
+  def test_finds_function_with_cast_parameter
+    code = "foo(a, (void*)b);"
+    branch_counter = BranchCounter.new( code )
+    assert_equal 1, branch_counter.branches
   end
 end
