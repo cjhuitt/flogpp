@@ -2,8 +2,8 @@ require 'minitest/autorun'
 require_relative '../lib/branch_counter'
 
 class BranchCounterTest < Minitest::Test
-  def test_finds_zero_branches_for_empty_function
-    code = "void foo() { }"
+  def test_finds_zero_branches_for_empty_scope
+    code = "{ }"
     branch_counter = BranchCounter.new( code )
     assert_equal 0, branch_counter.branches
   end
@@ -126,5 +126,26 @@ class BranchCounterTest < Minitest::Test
     code = "foo(a, (void*)b);"
     branch_counter = BranchCounter.new( code )
     assert_equal 1, branch_counter.branches
+  end
+
+  def test_finds_one_branch_for_function_in_if_after_preprocessor
+    code = <<-CODE
+#if 1
+         if (insertDisk(diskId) == 0)
+         {
+         }
+#endif
+    CODE
+    branch_counter = BranchCounter.new( code )
+    assert_equal 1, branch_counter.branches
+  end
+
+  def test_finds_branches_in_else_if_snippet
+    code = <<-CODE
+      else if (memcmp(ss->fileName, str_id, strlen(str_id)) == 0) {
+      }
+    CODE
+    branch_counter = BranchCounter.new( code )
+    assert_equal 2, branch_counter.branches
   end
 end

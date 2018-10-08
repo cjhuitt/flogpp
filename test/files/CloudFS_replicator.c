@@ -237,6 +237,7 @@ void initStream(StreamInfo * stream, DiskInfo * info, Hash hostId)
 }
 
 #if 1
+// ( 12a, 33b, 4c)
 DiskInfo *rememberDisk(Hash diskId, Hash hostId)
 {
    DiskInfo *info = NULL;
@@ -312,7 +313,9 @@ static char html_type_string[] = "Content-type: text/html";
 static char moved_string[] = "HTTP/1.1 301 Moved Permanently";
 //static char nomod_string[] = "HTTP/1.1 304 Not Modified";
 
+// ( 6a, 2b, 0c)
 #define wr(__a) do{size_t l=strlen(__a);memcpy(outBuf,__a,l); outBuf+=l; *outBuf++='\r'; *outBuf++='\n';}while(0);
+// ( 2a, 1b, 1c)
 #define FLUSH() do{ if(outBuf!=cs->outBuf) {\
 		ignored=write(cs->clientSock,cs->outBuf,outBuf-cs->outBuf);\
 		outBuf=cs->outBuf;\
@@ -334,6 +337,7 @@ typedef struct {
    List_Links list;
 } UWConnectionState;
 
+// ( 44a, 124b, 43c)
 int handleHttpClient(UWConnectionState * cs, int canRead, int canWrite)
 {
 

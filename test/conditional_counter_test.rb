@@ -109,4 +109,69 @@ class ConditionalCounterTest < Minitest::Test
     conditional_counter = ConditionalCounter.new code
     assert_equal 1, conditional_counter.conditionals
   end
+
+  def test_finds_no_conditionals_for_function_call_that_contains_try
+    code = "a = ListEntry(b);"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
+
+  def test_finds_no_conditionals_for_while_0_construct
+    code = "do { a(); } while( 0 );"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
+
+  def test_finds_no_conditionals_for_infinite_for_construct
+    code = "for ( ;; )"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
+
+  def test_finds_unary_conditional_in_compound_if_construct
+    code = "if (canRead && cs->bytesReceived == 0)"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 2, conditional_counter.conditionals
+  end
+
+  def test_finds_multiline_if_clauses
+    code =<<-CODE
+      if (ss->verb == HTTP_PUT &&
+          sscanf(ss->fileName, "/log?%40s&%40s", sDiskId, sId) == 2
+          && LogFS_HashSetString(&diskId, sDiskId)
+          && LogFS_HashSetString(&id, sId))
+    CODE
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 4, conditional_counter.conditionals
+  end
+
+  def test_finds_no_conditionals_inside_a_string
+    code =<<-CODE
+      "<html>"
+    CODE
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
+
+  def test_finds_conditionals_between_strings
+    code =<<-CODE
+         if (info != NULL) {
+            printf("locking fails\n");
+            if (!LogFS_HashEquals(LogFS_HashApply(id), getCurrentId(diskId))) {
+               printf("id check fails\n");
+            }
+         }
+    CODE
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 2, conditional_counter.conditionals
+  end
+
+  def test_handles_empty_string_prior_to_conditional_inside_string
+    code =<<-CODE
+         wr("");
+         wr("<html><head><title>Not Found</title></head><body><p1>NOT FOUND</p1></body></html>\n");
+    CODE
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 0, conditional_counter.conditionals
+  end
 end

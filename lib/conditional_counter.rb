@@ -12,6 +12,7 @@ class ConditionalCounter
     class Cleaners < CleanerCollection
       def initialize
         super [CommentCleaner,
+               StringCleaner,
                ScopeCleaner,
                SimplePointerRedirectCleaner,
                SimpleMemberAccessCleaner,
@@ -21,16 +22,27 @@ class ConditionalCounter
       end
     end
 
+    IF_BLOCK = /\bif\b[[:space:]]*(?<re>\((?:(?>[^()]+)|\g<re>)*\))/m
     def check_conditionals_in code
-      conditionals  = code.scan("catch").size
+      conditionals = 0
+
+      code.scan(IF_BLOCK) { |chunk|
+        conditionals += find_conditionls_in_if_block chunk
+      }
+      code = code.gsub IF_BLOCK, ""
+
+      conditionals += code.scan(/\bcatch\b/).size
       conditionals += code.scan(/[^<>-]\s*(>|<)\s*=?\s*[^<>]/).size
-      conditionals += code.scan(/\bif\b[[:space:]]*\([^=><)]+\)/).size
-      conditionals += code.scan("else").size
-      conditionals += code.scan("case").size
-      conditionals += code.scan("default").size
-      conditionals += code.scan("try").size
-      conditionals += code.scan(/^\s*\w+\s*$/).size      # unary conditions
+      conditionals += code.scan(/\belse\b/).size
+      conditionals += code.scan(/\bcase\b/).size
+      conditionals += code.scan(/\bdefault\b/).size
+      conditionals += code.scan(/\btry\b/).size
       conditionals += code.scan("==").size
-      conditionals +  code.scan("!=").size
+      conditionals += code.scan("!=").size
+      conditionals
+    end
+
+    def find_conditionls_in_if_block code
+      code.first.split(/(?:\|\||&&)/).count
     end
 end
