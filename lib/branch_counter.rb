@@ -22,7 +22,8 @@ class BranchCounter
                IfCleaner,
                ForCleaner,
                CastCleaner,
-               CatchCleaner]
+               CatchCleaner,
+               WhileCleaner]
       end
     end
 
@@ -39,7 +40,7 @@ class BranchCounter
       branches +  code.scan(/\bgoto\b/).size * 3
     end
 
-    FUNCTION = /\b[[:word:]]+[[:space:]]*\([^()]*\)/
+    FUNCTION = /\b[[:word:]]+[[:space:]]*\([^()]*\)/m
     def self.FindFunctions code
       functions = code.scan(FUNCTION)
       return 0 if functions.empty?

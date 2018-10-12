@@ -148,4 +148,13 @@ class BranchCounterTest < Minitest::Test
     branch_counter = BranchCounter.new( code )
     assert_equal 2, branch_counter.branches
   end
+
+  def test_finds_one_branch_for_function_in_while_clause
+    code = <<-CODE
+      while (List_IsEmpty(list)) {
+      }
+    CODE
+    branch_counter = BranchCounter.new( code )
+    assert_equal 1, branch_counter.branches
+  end
 end

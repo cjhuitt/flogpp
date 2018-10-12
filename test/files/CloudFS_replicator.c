@@ -676,6 +676,7 @@ int handleHttpClient(UWConnectionState * cs, int canRead, int canWrite)
  * threads.
  */
 
+// ( 3a, 15b, 3c)
 void *handleHttpClients(void *data)
 {
    List_Links *list = data;

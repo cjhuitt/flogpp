@@ -74,6 +74,12 @@ class ConditionalCounterTest < Minitest::Test
     assert_equal 1, conditional_counter.conditionals
   end
 
+  def test_finds_one_conditional_for_ternary
+    code = "a = b() ? c() : d();"
+    conditional_counter = ConditionalCounter.new( code )
+    assert_equal 1, conditional_counter.conditionals
+  end
+
   def test_finds_one_conditional_for_case
     code = "case FOO:"
     conditional_counter = ConditionalCounter.new( code )
@@ -98,8 +104,14 @@ class ConditionalCounterTest < Minitest::Test
     assert_equal 1, conditional_counter.conditionals
   end
 
-  def test_finds_one_conditional_for_unary_conditional
+  def test_finds_one_conditional_for_unary_if_conditional
     code = "if(foo)"
+    conditional_counter = ConditionalCounter.new( code )
+    assert_equal 1, conditional_counter.conditionals
+  end
+
+  def test_finds_one_conditional_for_unary_while_conditional
+    code = "while(foo)"
     conditional_counter = ConditionalCounter.new( code )
     assert_equal 1, conditional_counter.conditionals
   end
@@ -130,6 +142,12 @@ class ConditionalCounterTest < Minitest::Test
 
   def test_finds_unary_conditional_in_compound_if_construct
     code = "if (canRead && cs->bytesReceived == 0)"
+    conditional_counter = ConditionalCounter.new code
+    assert_equal 2, conditional_counter.conditionals
+  end
+
+  def test_finds_unary_conditionals_in_compound_ternary_construct
+    code = "a = (unary && conditional == 0) ? b : c;"
     conditional_counter = ConditionalCounter.new code
     assert_equal 2, conditional_counter.conditionals
   end
