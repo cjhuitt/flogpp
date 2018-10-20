@@ -4,6 +4,7 @@ require 'optparse'
 
 require_relative 'file_set'
 require_relative 'output_writer'
+require_relative 'range'
 require_relative 'stats'
 
 options = {}
@@ -114,8 +115,11 @@ if files.empty?
 end
 
 set = FileSet.new files
-file_stats = Stats.new set.scored, set.totals, options
-function_stats = Stats.new set.analyzed, set.totals, options
+range = Range.new(full: options[:full],
+                  percent: options[:max_percent],
+                  number: options[:max_count])
+file_stats = Stats.new set.scored, set.totals, range, options[:rank]
+function_stats = Stats.new set.analyzed, set.totals, range, options[:rank]
 
 score_fmt = options[:details] ? DetailsScoreFormatter :
     case options[:rank]
