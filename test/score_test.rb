@@ -70,7 +70,6 @@ class ScoreTest < Minitest::Test
   end
 
   def test_division_does_not_modify_original
-    # Yes, I brainlessly messed this up once....
     score = Score.new 2, 4, 6
     avg = score / 2
     assert_equal 2, score.assignments
@@ -84,5 +83,13 @@ class ScoreTest < Minitest::Test
     assert_equal 1, score.assignments
     assert_equal 2, score.branches
     assert_equal 3, score.conditionals
+  end
+
+  def test_division_without_truncation
+    score = Score.new 2, 3, 4
+    avg = score / 2
+    assert_equal 1, avg.assignments
+    assert_equal 1.5, avg.branches
+    assert_equal 2, avg.conditionals
   end
 end
