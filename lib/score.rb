@@ -24,9 +24,9 @@ class Score
   end
 
   def / divisor
-    a = @assignments / divisor
-    b = @branches / divisor
-    c = @conditionals / divisor
+    a = @assignments.fdiv divisor
+    b = @branches.fdiv divisor
+    c = @conditionals.fdiv divisor
     Score.new a, b, c
   end
 
